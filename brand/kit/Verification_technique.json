@@ -1,0 +1,92 @@
+[
+  {
+    "file": "PARFOLYS_logo_principal_transparent.svg",
+    "paths": 31,
+    "bitmap_images": 0,
+    "png_size": [
+      1800,
+      840
+    ],
+    "alpha": true
+  },
+  {
+    "file": "PARFOLYS_logo_principal_ivoire.svg",
+    "paths": 31,
+    "bitmap_images": 0,
+    "png_size": [
+      1800,
+      840
+    ],
+    "alpha": false
+  },
+  {
+    "file": "PARFOLYS_logo_horizontal_transparent.svg",
+    "paths": 31,
+    "bitmap_images": 0,
+    "png_size": [
+      2100,
+      540
+    ],
+    "alpha": true
+  },
+  {
+    "file": "PARFOLYS_reseaux_sociaux_1080.svg",
+    "paths": 31,
+    "bitmap_images": 0,
+    "png_size": [
+      1080,
+      1080
+    ],
+    "alpha": false
+  },
+  {
+    "file": "PARFOLYS_profil_symbole_1080.svg",
+    "paths": 9,
+    "bitmap_images": 0,
+    "png_size": [
+      1080,
+      1080
+    ],
+    "alpha": false
+  },
+  {
+    "file": "PARFOLYS_favicon_512.svg",
+    "paths": 9,
+    "bitmap_images": 0,
+    "png_size": [
+      512,
+      512
+    ],
+    "alpha": false
+  },
+  {
+    "file": "PARFOLYS_logo_monochrome_noir.svg",
+    "paths": 31,
+    "bitmap_images": 0,
+    "png_size": [
+      1800,
+      840
+    ],
+    "alpha": true
+  },
+  {
+    "file": "PARFOLYS_logo_monochrome_blanc.svg",
+    "paths": 31,
+    "bitmap_images": 0,
+    "png_size": [
+      1800,
+      840
+    ],
+    "alpha": true
+  },
+  {
+    "file": "PARFOLYS_logo_fond_sombre.svg",
+    "paths": 31,
+    "bitmap_images": 0,
+    "png_size": [
+      1800,
+      840
+    ],
+    "alpha": false
+  }
+]

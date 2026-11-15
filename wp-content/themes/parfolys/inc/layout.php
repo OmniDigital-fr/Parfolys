@@ -112,6 +112,7 @@ function parfolys_render_header() {
 				<nav aria-label="<?php esc_attr_e( 'Navigation secondaire', 'parfolys' ); ?>">
 					<?php parfolys_menu( 'parfolys-secondary', parfolys_secondary_links(), 'pf-menu pf-menu--drawer-secondary' ); ?>
 				</nav>
+				<p class="pf-drawer__account"><a href="<?php echo esc_url( $account_url ); ?>"><?php echo parfolys_icon( 'user' ); // phpcs:ignore ?><span><?php echo is_user_logged_in() ? esc_html__( 'Mon compte', 'parfolys' ) : esc_html__( 'Se connecter', 'parfolys' ); ?></span></a></p>
 				<p class="pf-drawer__desc"><?php esc_html_e( 'Parfums, Beauté & Maison', 'parfolys' ); ?></p>
 			</div>
 		</div>

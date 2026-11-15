@@ -16,7 +16,7 @@ function parfolys_product_fields() {
 			'ambiance'  => __( 'Parfum d\'ambiance', 'parfolys' ),
 			'coffret'   => __( 'Coffret', 'parfolys' ),
 		) ),
-		'_pf_highlights'  => array( 'type' => 'textarea', 'label' => __( 'Points clés (un par ligne)', 'parfolys' ), 'desc' => __( 'Trois lignes maximum, issues de la documentation fournisseur.', 'parfolys' ) ),
+		'_pf_highlights'  => array( 'type' => 'textarea', 'label' => __( 'Ce qu’il faut savoir (un point par ligne)', 'parfolys' ), 'desc' => __( 'Trois lignes maximum, issues de la documentation du fabricant.', 'parfolys' ) ),
 		'_pf_notes_top'   => array( 'type' => 'text', 'label' => __( 'Notes de tête', 'parfolys' ), 'desc' => __( 'Séparées par des virgules. Parfums, soins parfumés, bougies.', 'parfolys' ) ),
 		'_pf_notes_heart' => array( 'type' => 'text', 'label' => __( 'Notes de cœur', 'parfolys' ) ),
 		'_pf_notes_base'  => array( 'type' => 'text', 'label' => __( 'Notes de fond', 'parfolys' ) ),

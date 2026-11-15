@@ -1,0 +1,16 @@
+PARFOLYS — KIT DE FICHIERS / 10 NOVEMBRE 2026
+
+Référence approuvée : page 1 du projet Canva « Logótipo editável PARFOLYS ».
+Le Jour Serif / Montserrat. Noir #111111, bordeaux #76182A, or #C99A36, ivoire #F7F1E8.
+
+SVG_vectoriels : tracés vectoriels, textes convertis en contours, sans image bitmap incorporée.
+Les textes restent modifiables en tant que textes dans le projet Canva source ; dans ces SVG, ils sont des contours.
+PNG_rasterises : images bitmap aux dimensions indiquées dans les noms ou le fichier de vérification. Les fichiers « transparent » et monochromes ont un canal alpha.
+PDF_vectoriels : logos vectoriels à 180 mm de large (210 mm pour l’horizontal), sans fond perdu ni traits de coupe. Fichiers de logo à placer dans une maquette ; pas de certification PDF/X ni conversion CMJN.
+Sources : export SVG transparent de la page 1 Canva, conservé intact.
+
+Adaptations : mêmes contours et mêmes couleurs ; centrage du symbole et de la signature, ajustement du cadre ; disposition horizontale avec symbole à gauche. Les icônes utilisent uniquement le symbole existant. La version sombre est blanche sur noir.
+
+Utilisation : logo_horizontal_transparent pour le site ; reseaux_sociaux_1080 pour une publication carrée ; profil_symbole_1080 pour un avatar circulaire ; favicon_512 comme icône WordPress. Les petits favicons ont des traits fins : contrôler le rendu dans le navigateur choisi.
+
+ÉTAT CANVA : une copie des 13 pages a été créée et renommée. La remise en forme des 13 pages n’est pas terminée. Les fichiers de ce dossier ont été préparés depuis le SVG réel de la page 1 ; ils ne sont pas tous des exports directs des pages 2 à 13.

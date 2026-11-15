@@ -32,7 +32,7 @@ add_action( 'customize_register', function ( WP_Customize_Manager $wp ) {
 	) ) );
 
 	$wp->add_setting( 'parfolys_hero_text', array(
-		'default'           => __( 'Parfums, soins parfumés et senteurs pour la maison : une sélection soignée, avec des repères simples pour choisir.', 'parfolys' ),
+		'default'           => __( 'Explorez les parfums, la beauté et les senteurs pour la maison, avec des repères pour choisir selon vos envies.', 'parfolys' ),
 		'sanitize_callback' => 'sanitize_text_field',
 	) );
 	$wp->add_control( 'parfolys_hero_text', array(
@@ -87,7 +87,7 @@ add_action( 'customize_register', function ( WP_Customize_Manager $wp ) {
 	) );
 
 	$wp->add_setting( 'parfolys_parcel_notice', array(
-		'default'           => __( 'Votre commande réunit des articles Parfums & Beauté et des articles Maison parfumée. Ils sont préparés par deux entrepôts différents : vous recevrez deux colis distincts, qui peuvent arriver à des dates différentes.', 'parfolys' ),
+		'default'           => __( 'Votre commande sera expédiée en plusieurs colis. Retrouvez le détail des envois ci-dessous.', 'parfolys' ),
 		'sanitize_callback' => 'sanitize_textarea_field',
 	) );
 	$wp->add_control( 'parfolys_parcel_notice', array(

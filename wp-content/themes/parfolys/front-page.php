@@ -36,9 +36,9 @@ $parfums_url = parfolys_cat_url( 'parfums' );
 			<div class="pf-hero__panel">
 				<div class="pf-hero__text">
 					<h1 id="pf-hero-title" class="pf-hero__title"><?php esc_html_e( 'Découvrez le parfum qui vous ressemble.', 'parfolys' ); ?></h1>
-					<p class="pf-hero__lead"><?php echo esc_html( get_theme_mod( 'parfolys_hero_text', __( 'Parfums, soins parfumés et senteurs pour la maison : une sélection soignée, avec des repères simples pour choisir.', 'parfolys' ) ) ); ?></p>
+					<p class="pf-hero__lead"><?php echo esc_html( get_theme_mod( 'parfolys_hero_text', __( 'Explorez les parfums, la beauté et les senteurs pour la maison, avec des repères pour choisir selon vos envies.', 'parfolys' ) ) ); ?></p>
 					<p class="pf-hero__cta">
-						<a class="pf-btn pf-btn--lg" href="<?php echo esc_url( $parfums_url ); ?>"><?php esc_html_e( 'Découvrir les parfums', 'parfolys' ); ?></a>
+						<a class="pf-btn pf-btn--lg" href="<?php echo esc_url( $parfums_url ); ?>"><?php esc_html_e( 'Explorer les parfums', 'parfolys' ); ?></a>
 					</p>
 				</div>
 				<figure class="pf-hero__media">
@@ -97,52 +97,80 @@ $parfums_url = parfolys_cat_url( 'parfums' );
 		<div class="pf-container">
 			<header class="pf-section__head">
 				<h2 id="pf-sel-title" class="pf-section__title"><?php esc_html_e( 'Notre sélection', 'parfolys' ); ?></h2>
-				<a class="pf-link-arrow" href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>"><?php esc_html_e( 'Toute la boutique', 'parfolys' ); ?><?php echo parfolys_icon( 'arrow' ); // phpcs:ignore ?></a>
+				<a class="pf-link-arrow" href="<?php echo esc_url( $parfums_url ); ?>"><?php esc_html_e( 'Explorer les parfums', 'parfolys' ); ?><?php echo parfolys_icon( 'arrow' ); // phpcs:ignore ?></a>
 			</header>
 			<?php
-			$featured_ids = wc_get_products( array( 'featured' => true, 'limit' => 4, 'return' => 'ids', 'status' => current_user_can( 'edit_products' ) ? array( 'publish', 'private' ) : 'publish' ) );
+			$featured_ids = wc_get_products( array( 'featured' => true, 'category' => array( 'parfums' ), 'limit' => 4, 'return' => 'ids', 'status' => current_user_can( 'edit_products' ) ? array( 'publish', 'private' ) : 'publish' ) );
 			parfolys_product_grid(
-				$featured_ids ? array( 'include' => $featured_ids ) : array( 'orderby' => 'date', 'order' => 'DESC' ),
-				__( 'La sélection PARFOLYS arrive bientôt.', 'parfolys' )
+				$featured_ids ? array( 'include' => $featured_ids ) : array( 'category' => array( 'parfums' ), 'orderby' => 'date', 'order' => 'DESC' ),
+				__( 'La sélection de parfums sera présentée ici dès la mise en ligne du catalogue.', 'parfolys' )
 			);
 			?>
 		</div>
 	</section>
+	<?php endif; ?>
 
+	<section class="pf-concept" aria-labelledby="pf-concept-title">
+		<div class="pf-container pf-concept__in">
+			<h2 id="pf-concept-title" class="screen-reader-text"><?php esc_html_e( 'PARFOLYS', 'parfolys' ); ?></h2>
+			<p class="pf-concept__text"><?php esc_html_e( 'PARFOLYS réunit parfums, beauté et senteurs pour la maison dans une boutique en ligne pensée pour vous aider à choisir.', 'parfolys' ); ?></p>
+			<p class="pf-concept__sign"><?php esc_html_e( 'Le plaisir des senteurs, pour vous et votre maison.', 'parfolys' ); ?></p>
+		</div>
+	</section>
+
+	<?php if ( $has_wc ) : ?>
 	<section class="pf-section pf-section--alt" aria-labelledby="pf-care-title">
 		<div class="pf-container pf-care">
 			<div class="pf-care__intro">
 				<h2 id="pf-care-title" class="pf-section__title"><?php esc_html_e( 'Beauté et soins', 'parfolys' ); ?></h2>
-				<p><?php esc_html_e( 'Crèmes, huiles et gels douche parfumés : prolongez votre senteur préférée du bain au quotidien.', 'parfolys' ); ?></p>
-				<a class="pf-btn pf-btn--outline" href="<?php echo esc_url( parfolys_cat_url( 'corps-bain' ) ); ?>"><?php esc_html_e( 'Voir Corps & Bain', 'parfolys' ); ?></a>
+				<p><?php esc_html_e( 'Des soins parfumés pour vos gestes du quotidien. Explorez notre sélection pour le corps, le bain et la douche.', 'parfolys' ); ?></p>
+				<a class="pf-btn pf-btn--outline" href="<?php echo esc_url( parfolys_cat_url( 'corps-bain' ) ); ?>"><?php esc_html_e( 'Explorer les soins corps et bain', 'parfolys' ); ?></a>
 			</div>
 			<div class="pf-care__products">
-				<?php parfolys_product_grid( array( 'category' => array( 'corps-bain' ), 'limit' => 3 ), __( 'Les soins parfumés arrivent bientôt.', 'parfolys' ), 3 ); ?>
+				<?php parfolys_product_grid( array( 'category' => array( 'corps-bain' ), 'limit' => 3 ), __( 'Les soins parfumés seront présentés ici dès la mise en ligne du catalogue.', 'parfolys' ), 3 ); ?>
 			</div>
 		</div>
 	</section>
 
-	<section class="pf-section" aria-labelledby="pf-gift-title">
+	<section class="pf-section" aria-labelledby="pf-home-title">
+		<div class="pf-container pf-care pf-care--reverse">
+			<div class="pf-care__intro">
+				<h2 id="pf-home-title" class="pf-section__title"><?php esc_html_e( 'Maison parfumée', 'parfolys' ); ?></h2>
+				<p><?php esc_html_e( 'Des senteurs pour donner le ton à votre intérieur. Comparez les formats, explorez les notes et consultez les conseils d’utilisation.', 'parfolys' ); ?></p>
+				<a class="pf-btn pf-btn--outline" href="<?php echo esc_url( parfolys_cat_url( 'maison-parfumee' ) ); ?>"><?php esc_html_e( 'Explorer la maison parfumée', 'parfolys' ); ?></a>
+			</div>
+			<div class="pf-care__products">
+				<?php parfolys_product_grid( array( 'category' => array( 'maison-parfumee' ), 'limit' => 3 ), __( 'Les senteurs pour la maison seront présentées ici dès la mise en ligne du catalogue.', 'parfolys' ), 3 ); ?>
+			</div>
+		</div>
+	</section>
+
+	<section class="pf-section pf-section--alt" aria-labelledby="pf-gift-title">
 		<div class="pf-container">
 			<header class="pf-section__head">
-				<h2 id="pf-gift-title" class="pf-section__title"><?php esc_html_e( 'Idées cadeaux', 'parfolys' ); ?></h2>
-				<a class="pf-link-arrow" href="<?php echo esc_url( parfolys_cat_url( 'cadeaux' ) ); ?>"><?php esc_html_e( 'Tous les cadeaux', 'parfolys' ); ?><?php echo parfolys_icon( 'arrow' ); // phpcs:ignore ?></a>
+				<div>
+					<h2 id="pf-gift-title" class="pf-section__title"><?php esc_html_e( 'Idées cadeaux', 'parfolys' ); ?></h2>
+					<p class="pf-section__lead"><?php esc_html_e( 'Une attention parfumée, choisie pour faire plaisir.', 'parfolys' ); ?></p>
+				</div>
+				<a class="pf-link-arrow" href="<?php echo esc_url( parfolys_cat_url( 'cadeaux' ) ); ?>"><?php esc_html_e( 'Trouver une idée cadeau', 'parfolys' ); ?><?php echo parfolys_icon( 'arrow' ); // phpcs:ignore ?></a>
 			</header>
-			<?php parfolys_product_grid( array( 'category' => array( 'cadeaux' ), 'limit' => 4 ), __( 'Les idées cadeaux arrivent bientôt.', 'parfolys' ) ); ?>
+			<?php parfolys_product_grid( array( 'category' => array( 'cadeaux' ), 'limit' => 4 ), __( 'Les idées cadeaux seront présentées ici dès la mise en ligne du catalogue.', 'parfolys' ) ); ?>
 		</div>
 	</section>
 	<?php endif; ?>
 
 	<?php
 	$posts = get_posts( array( 'numberposts' => 3, 'post_status' => 'publish' ) );
-	if ( $posts ) :
-		?>
-	<section class="pf-section pf-section--alt" aria-labelledby="pf-tips-title">
+	?>
+	<section class="pf-section" aria-labelledby="pf-tips-title">
 		<div class="pf-container">
 			<header class="pf-section__head">
-				<h2 id="pf-tips-title" class="pf-section__title"><?php esc_html_e( 'Conseils', 'parfolys' ); ?></h2>
-				<a class="pf-link-arrow" href="<?php echo esc_url( parfolys_page_url( 'conseils' ) ); ?>"><?php esc_html_e( 'Tous les conseils', 'parfolys' ); ?><?php echo parfolys_icon( 'arrow' ); // phpcs:ignore ?></a>
+				<h2 id="pf-tips-title" class="pf-section__title"><?php esc_html_e( 'Conseils et accompagnement', 'parfolys' ); ?></h2>
+				<?php if ( $posts ) : ?>
+					<a class="pf-link-arrow" href="<?php echo esc_url( parfolys_page_url( 'conseils' ) ); ?>"><?php esc_html_e( 'Tous les conseils', 'parfolys' ); ?><?php echo parfolys_icon( 'arrow' ); // phpcs:ignore ?></a>
+				<?php endif; ?>
 			</header>
+			<?php if ( $posts ) : ?>
 			<div class="pf-tips">
 				<?php foreach ( $posts as $i => $p ) : ?>
 					<article class="pf-tip<?php echo 0 === $i ? ' pf-tip--lead' : ''; ?>">
@@ -158,11 +186,15 @@ $parfums_url = parfolys_cat_url( 'parfums' );
 					</article>
 				<?php endforeach; ?>
 			</div>
+			<?php else : ?>
+				<?php parfolys_admin_note( __( 'Guides Conseils masqués : aucun article publié (familles olfactives, formats, produits maison).', 'parfolys' ) ); ?>
+			<?php endif; ?>
+			<div class="pf-support">
+				<p><?php esc_html_e( 'Une question sur votre choix ou votre commande ? Contactez PARFOLYS.', 'parfolys' ); ?></p>
+				<a class="pf-btn pf-btn--outline" href="<?php echo esc_url( parfolys_page_url( 'contact' ) ); ?>"><?php esc_html_e( 'Nous contacter', 'parfolys' ); ?></a>
+			</div>
 		</div>
 	</section>
-	<?php else : ?>
-		<div class="pf-container"><?php parfolys_admin_note( __( 'Section Conseils masquée : aucun article publié.', 'parfolys' ) ); ?></div>
-	<?php endif; ?>
 
 	<?php
 	$service = parfolys_lines( 'parfolys_service_items' );

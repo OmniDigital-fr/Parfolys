@@ -15,13 +15,19 @@ Boutique de parfums, soins parfumés et senteurs pour la maison, sur **parfolys.
   - `inc/contact.php` : formulaire de contact natif (shortcode `[parfolys_contact]`).
   - `assets/fonts/` : Libre Baskerville et Montserrat auto-hébergées (pas d'appel Google Fonts).
 - `brand/logos/` : logos originaux fournis (PDF vectoriels) et leurs exports WebP sans perte (300 dpi, pixels identiques au rendu PDF).
+- `brand/kit/` : kit officiel issu du Brand Book Notion (SVG vectoriels, PNG, favicons). `favicon_512` est l'icône WordPress.
+
+## Sources appliquées
+
+Export Notion PARFOLYS V2 (pages 01 à 06 et 07) lu intégralement : tokens du Brand Book (boutons 6 px, cartes 8 px, #666666, #767676, #E5E5E5, conteneur 1200 px), textes de la Carta Editorial (univers, À propos, microtextes), séquence d'accueil, filtres, fiche et panier du Caderno WooCommerce.
 
 ## Configuration WooCommerce en place (préproduction)
 
 - Site en mode maintenance Hostinger, indexation désactivée.
 - France, EUR, prix TTC, TVA 20 %, commande invitée autorisée, compte client facultatif.
 - Catégories : Parfums, Corps & Bain, Maison parfumée (Bougies parfumées, Diffuseurs, Parfums d'ambiance), Cadeaux.
-- Attributs : Contenance, Famille olfactive (Floral, Frais, Boisé, Gourmand), Concentration.
+- Sous-catégories : Soins du corps, Bain et douche ; Bougies parfumées, Diffuseurs à bâtonnets, Parfums d'ambiance ; Cadeaux : Parfum, Beauté, Maison, Coffrets (affichées seulement si elles contiennent des produits).
+- Attributs : Pour (Femme, Homme, Mixte), Contenance, Famille olfactive (Floral, Frais, Boisé, Gourmand), Concentration.
 - Classes d'expédition : `colis-beaute` et `colis-maison` (détection automatique des colis séparés).
 - **Éléments de test à retirer avant la mise en ligne** : 4 produits privés « [TEST] », moyen de paiement « Commande test » (chèque renommé), tarif de livraison à 0 € « à confirmer », commandes de test.
 

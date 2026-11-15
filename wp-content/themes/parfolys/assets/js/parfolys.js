@@ -46,6 +46,23 @@
 		window.addEventListener('resize', function () { if (window.innerWidth > 921 && !drawer.hidden) { close(); } });
 	}
 
+	/* --- Panneau de filtres (ouvert en desktop, repliable en mobile) ------ */
+	var panel = document.querySelector('[data-pf-filters]');
+	if (panel) {
+		var mq = window.matchMedia('(min-width: 769px)');
+		var sync = function () { if (mq.matches) { panel.setAttribute('open', ''); } };
+		sync();
+		if (mq.addEventListener) { mq.addEventListener('change', sync); }
+		var closeF = panel.querySelector('.pf-filters__close');
+		if (closeF) {
+			closeF.addEventListener('click', function () {
+				panel.removeAttribute('open');
+				var target = document.querySelector('ul.products, .pf-empty--archive, .woocommerce-result-count');
+				if (target) { target.setAttribute('tabindex', '-1'); target.focus(); }
+			});
+		}
+	}
+
 	/* --- Pastilles de variantes -------------------------------------------- */
 	var buildSwatches = function (form) {
 		var selects = form.querySelectorAll('table.variations select');

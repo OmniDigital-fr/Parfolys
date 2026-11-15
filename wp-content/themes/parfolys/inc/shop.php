@@ -151,6 +151,7 @@ function parfolys_render_filters() {
 
 	// Attributs WooCommerce (filtrage natif filter_xxx).
 	$groups = array(
+		'public'            => __( 'Pour', 'parfolys' ),
 		'famille-olfactive' => __( 'Famille olfactive', 'parfolys' ),
 		'concentration'     => __( 'Concentration', 'parfolys' ),
 		'contenance'        => __( 'Format', 'parfolys' ),
@@ -188,24 +189,59 @@ function parfolys_render_filters() {
 	}
 
 	$html = trim( ob_get_clean() );
-	$any  = false;
-	foreach ( array_keys( $_GET ) as $k ) { // phpcs:ignore
-		if ( 0 === strpos( $k, 'filter_' ) || in_array( $k, array( 'marque', 'dispo' ), true ) ) {
-			$any = true;
-		}
-	}
 	if ( ! $html ) {
 		return;
 	}
-	echo '<div class="pf-filters">' . $html; // phpcs:ignore
-	if ( $any ) {
-		$base = is_product_taxonomy() ? get_term_link( get_queried_object() ) : wc_get_page_permalink( 'shop' );
-		if ( is_search() ) {
-			$base = add_query_arg( array( 's' => get_search_query(), 'post_type' => 'product' ), home_url( '/' ) );
-		}
-		printf( '<p class="pf-filters__reset"><a href="%s">%s</a></p>', esc_url( $base ), esc_html__( 'Effacer les filtres', 'parfolys' ) );
+	$active = parfolys_active_filters();
+	$base   = is_product_taxonomy() ? get_term_link( get_queried_object() ) : wc_get_page_permalink( 'shop' );
+	if ( is_search() ) {
+		$base = add_query_arg( array( 's' => get_search_query(), 'post_type' => 'product' ), home_url( '/' ) );
 	}
-	echo '</div>';
+	echo '<details class="pf-filters-panel" data-pf-filters>';
+	printf(
+		'<summary class="pf-filters-panel__toggle">%s%s</summary>',
+		esc_html__( 'Filtrer', 'parfolys' ),
+		$active ? ' <span class="pf-filters-panel__count">' . count( $active ) . '</span>' : ''
+	);
+	echo '<div class="pf-filters">' . $html . '<div class="pf-filters__actions">'; // phpcs:ignore
+	echo '<button type="button" class="pf-btn pf-filters__close">' . esc_html__( 'Afficher les résultats', 'parfolys' ) . '</button>';
+	if ( $active ) {
+		printf( '<a class="pf-filters__reset" href="%s">%s</a>', esc_url( $base ), esc_html__( 'Réinitialiser', 'parfolys' ) );
+	}
+	echo '</div></div></details>';
+
+	if ( $active ) {
+		echo '<ul class="pf-active-filters" aria-label="' . esc_attr__( 'Filtres actifs', 'parfolys' ) . '">';
+		foreach ( $active as $f ) {
+			printf(
+				'<li><a class="pf-chip is-active" href="%1$s">%2$s <span aria-hidden="true">×</span><span class="screen-reader-text">%3$s</span></a></li>',
+				esc_url( preg_replace( '#/page/\d+/?#', '/', remove_query_arg( array( $f['key'], 'paged' ) ) ) ),
+				esc_html( $f['label'] ),
+				esc_html__( '(retirer ce filtre)', 'parfolys' )
+			);
+		}
+		printf( '<li><a class="pf-filters__reset" href="%s">%s</a></li>', esc_url( $base ), esc_html__( 'Réinitialiser les filtres', 'parfolys' ) );
+		echo '</ul>';
+	}
+}
+
+/** Filtres actifs (clé GET et libellé lisible). */
+function parfolys_active_filters() {
+	$out = array();
+	foreach ( $_GET as $key => $val ) { // phpcs:ignore
+		$key = sanitize_key( $key );
+		$val = sanitize_title( wp_unslash( $val ) );
+		if ( 0 === strpos( $key, 'filter_' ) ) {
+			$term  = get_term_by( 'slug', $val, 'pa_' . substr( $key, 7 ) );
+			$out[] = array( 'key' => $key, 'label' => $term ? $term->name : $val );
+		} elseif ( 'marque' === $key ) {
+			$term  = get_term_by( 'slug', $val, 'product_brand' );
+			$out[] = array( 'key' => $key, 'label' => $term ? $term->name : $val );
+		} elseif ( 'dispo' === $key ) {
+			$out[] = array( 'key' => $key, 'label' => __( 'Disponible', 'parfolys' ) );
+		}
+	}
+	return $out;
 }
 
 /** Marque et disponibilité appliquées à la requête principale. */
@@ -239,15 +275,19 @@ add_action( 'woocommerce_no_products_found', function () {
 	echo '<div class="pf-empty pf-empty--archive">';
 	if ( $filtered ) {
 		echo '<h2>' . esc_html__( 'Aucun produit ne correspond à ces filtres.', 'parfolys' ) . '</h2>';
-		echo '<p>' . esc_html__( 'Retirez un filtre pour élargir la sélection.', 'parfolys' ) . '</p>';
+		echo '<p>' . esc_html__( 'Essayez d’élargir votre sélection.', 'parfolys' ) . '</p>';
+		$reset = is_product_taxonomy() ? get_term_link( get_queried_object() ) : wc_get_page_permalink( 'shop' );
+		printf( '<p><a class="pf-btn" href="%s">%s</a></p>', esc_url( $reset ), esc_html__( 'Réinitialiser les filtres', 'parfolys' ) );
+		echo '</div>';
+		return;
 	} elseif ( is_search() ) {
-		echo '<h2>' . esc_html( sprintf( __( 'Aucun résultat pour « %s ».', 'parfolys' ), get_search_query() ) ) . '</h2>';
-		echo '<p>' . esc_html__( 'Vérifiez l\'orthographe ou essayez un terme plus général : parfum, crème, bougie…', 'parfolys' ) . '</p>';
+		echo '<h2>' . esc_html__( 'Aucun résultat pour cette recherche.', 'parfolys' ) . '</h2>';
+		echo '<p>' . esc_html__( 'Essayez un nom de produit ou une famille olfactive.', 'parfolys' ) . '</p>';
 	} else {
 		echo '<h2>' . esc_html__( 'Cette sélection est en préparation.', 'parfolys' ) . '</h2>';
-		echo '<p>' . esc_html__( 'Les produits de cet univers seront bientôt disponibles.', 'parfolys' ) . '</p>';
+		echo '<p>' . esc_html__( 'Les produits de cet univers seront présentés ici dès la mise en ligne du catalogue.', 'parfolys' ) . '</p>';
 	}
-	printf( '<p><a class="pf-btn pf-btn--outline" href="%s">%s</a></p>', esc_url( wc_get_page_permalink( 'shop' ) ), esc_html__( 'Voir toute la boutique', 'parfolys' ) );
+	printf( '<p><a class="pf-btn pf-btn--outline" href="%s">%s</a></p>', esc_url( parfolys_cat_url( 'parfums' ) ), esc_html__( 'Explorer les parfums', 'parfolys' ) );
 	echo '</div>';
 }, 10 );
 
@@ -277,10 +317,18 @@ add_action( 'astra_woo_shop_title_after', function () {
 	if ( ! $product ) {
 		return;
 	}
+	$parts   = array();
+	$conc    = wc_get_product_terms( $product->get_id(), 'pa_concentration', array( 'fields' => 'names' ) );
+	if ( $conc && ! is_wp_error( $conc ) ) {
+		$parts[] = implode( ', ', $conc );
+	}
 	$formats = wc_get_product_terms( $product->get_id(), 'pa_contenance', array( 'fields' => 'names' ) );
 	if ( $formats && ! is_wp_error( $formats ) ) {
 		natsort( $formats );
-		echo '<p class="pf-card__formats">' . esc_html( implode( ' · ', $formats ) ) . '</p>';
+		$parts[] = implode( ' / ', $formats );
+	}
+	if ( $parts ) {
+		echo '<p class="pf-card__formats">' . esc_html( implode( ' · ', $parts ) ) . '</p>';
 	}
 } );
 
@@ -304,10 +352,15 @@ add_action( 'astra_woo_single_title_before', function () {
 	}
 } );
 
-/** Points clés. */
-add_action( 'astra_woo_single_short_description_after', function () {
+/** « Ce qu'il faut savoir » : sous le bloc d'achat. */
+add_action( 'astra_woo_single_add_to_cart_after', function () {
 	global $product;
+	$notes = parfolys_notes( $product );
 	$lines = array_filter( array_map( 'trim', preg_split( '/\r\n|\n/', parfolys_pf( $product, '_pf_highlights' ) ) ) );
+	if ( ! $lines && ! $notes ) {
+		return;
+	}
+	echo '<section class="pf-know" aria-labelledby="pf-know-title"><h2 class="pf-know__title" id="pf-know-title">' . esc_html__( 'Ce qu’il faut savoir', 'parfolys' ) . '</h2>';
 	if ( $lines ) {
 		echo '<ul class="pf-highlights">';
 		foreach ( array_slice( $lines, 0, 3 ) as $l ) {
@@ -315,7 +368,6 @@ add_action( 'astra_woo_single_short_description_after', function () {
 		}
 		echo '</ul>';
 	}
-	$notes = parfolys_notes( $product );
 	if ( $notes ) {
 		echo '<dl class="pf-notes pf-notes--compact">';
 		foreach ( $notes as $label => $value ) {
@@ -323,7 +375,8 @@ add_action( 'astra_woo_single_short_description_after', function () {
 		}
 		echo '</dl>';
 	}
-} );
+	echo '</section>';
+}, 10 );
 
 function parfolys_notes( $product ) {
 	return array_filter( array(
@@ -343,9 +396,9 @@ add_action( 'astra_woo_single_add_to_cart_after', function () {
 	}
 	$class = $product->get_shipping_class();
 	if ( 'colis-maison' === $class ) {
-		$rows[] = __( 'Expédié dans le colis Maison parfumée. Commandé avec des parfums ou des soins, il arrive dans un colis séparé.', 'parfolys' );
+		$rows[] = __( 'Expédition : colis Maison parfumée. Si votre commande contient aussi des parfums ou des soins, le détail des envois est indiqué dans le panier.', 'parfolys' );
 	} elseif ( 'colis-beaute' === $class ) {
-		$rows[] = __( 'Expédié dans le colis Parfums & Beauté. Commandé avec des articles Maison parfumée, il arrive dans un colis séparé.', 'parfolys' );
+		$rows[] = __( 'Expédition : colis Parfums & Beauté. Si votre commande contient aussi des articles Maison parfumée, le détail des envois est indiqué dans le panier.', 'parfolys' );
 	}
 	$page   = get_page_by_path( 'livraison-retours' );
 	if ( ! $rows && ! $page ) {
@@ -359,7 +412,7 @@ add_action( 'astra_woo_single_add_to_cart_after', function () {
 		printf( '<p><a href="%s">%s</a></p>', esc_url( get_permalink( $page ) ), esc_html__( 'Livraison et retours', 'parfolys' ) );
 	}
 	echo '</div></div>';
-} );
+}, 20 );
 
 /** Onglets adaptés au type de produit. */
 add_filter( 'woocommerce_product_tabs', function ( $tabs ) {
@@ -436,12 +489,32 @@ function parfolys_cart_parcels() {
 	return array_keys( $classes );
 }
 
+function parfolys_parcel_labels() {
+	return array(
+		'colis-beaute' => __( 'Colis Parfums & Beauté', 'parfolys' ),
+		'colis-maison' => __( 'Colis Maison parfumée', 'parfolys' ),
+	);
+}
+
 function parfolys_parcel_notice() {
 	$classes = parfolys_cart_parcels();
-	if ( in_array( 'colis-beaute', $classes, true ) && in_array( 'colis-maison', $classes, true ) ) {
-		$msg = get_theme_mod( 'parfolys_parcel_notice', __( 'Votre commande réunit des articles Parfums & Beauté et des articles Maison parfumée. Ils sont préparés par deux entrepôts différents : vous recevrez deux colis distincts, qui peuvent arriver à des dates différentes.', 'parfolys' ) );
-		echo '<div class="pf-parcels" role="note">' . parfolys_icon( 'box' ) . '<p>' . esc_html( $msg ) . '</p></div>'; // phpcs:ignore
+	if ( ! ( in_array( 'colis-beaute', $classes, true ) && in_array( 'colis-maison', $classes, true ) ) ) {
+		return;
 	}
+	$msg    = get_theme_mod( 'parfolys_parcel_notice', __( 'Votre commande sera expédiée en plusieurs colis. Retrouvez le détail des envois ci-dessous.', 'parfolys' ) );
+	$labels = parfolys_parcel_labels();
+	$groups = array();
+	foreach ( WC()->cart->get_cart() as $item ) {
+		$c = $item['data']->get_shipping_class();
+		if ( isset( $labels[ $c ] ) ) {
+			$groups[ $c ][] = $item['data']->get_name() . ( $item['quantity'] > 1 ? ' × ' . $item['quantity'] : '' );
+		}
+	}
+	echo '<div class="pf-parcels" role="note"><p class="pf-parcels__head">' . parfolys_icon( 'box' ) . '<span>' . esc_html( $msg ) . '</span></p><ul class="pf-parcels__list">'; // phpcs:ignore
+	foreach ( $groups as $c => $names ) {
+		echo '<li><strong>' . esc_html( $labels[ $c ] ) . '</strong> : ' . esc_html( implode( ', ', $names ) ) . '</li>';
+	}
+	echo '</ul></div>';
 }
 add_action( 'woocommerce_before_cart_table', 'parfolys_parcel_notice' );
 add_action( 'woocommerce_checkout_before_order_review', 'parfolys_parcel_notice' );
@@ -449,10 +522,7 @@ add_action( 'woocommerce_checkout_before_order_review', 'parfolys_parcel_notice'
 /** Colis indiqué sur chaque ligne du panier, de la commande et des e-mails. */
 add_filter( 'woocommerce_get_item_data', function ( $data, $item ) {
 	$class = $item['data']->get_shipping_class();
-	$map   = array(
-		'colis-beaute' => __( 'Colis Parfums & Beauté', 'parfolys' ),
-		'colis-maison' => __( 'Colis Maison parfumée', 'parfolys' ),
-	);
+	$map   = parfolys_parcel_labels();
 	if ( isset( $map[ $class ] ) && count( parfolys_cart_parcels() ) > 1 ) {
 		$data[] = array( 'key' => __( 'Expédition', 'parfolys' ), 'value' => $map[ $class ] );
 	}
@@ -483,11 +553,47 @@ add_filter( 'woocommerce_product_single_add_to_cart_text', function () {
 	return __( 'Ajouter au panier', 'parfolys' );
 } );
 add_filter( 'woocommerce_product_add_to_cart_text', function ( $text, $product ) {
-	if ( $product->is_type( 'variable' ) && $product->is_purchasable() ) {
-		return __( 'Choisir un format', 'parfolys' );
-	}
 	if ( ! $product->is_in_stock() ) {
-		return __( 'Voir le produit', 'parfolys' );
+		return __( 'Voir les détails', 'parfolys' );
+	}
+	if ( $product->is_type( 'variable' ) && $product->is_purchasable() ) {
+		return __( 'Choisir mon format', 'parfolys' );
 	}
 	return $text;
+}, 10, 2 );
+
+/** Indisponibilité : texte de la carta editorial. */
+add_filter( 'woocommerce_get_availability_text', function ( $text, $product ) {
+	if ( ! $product->is_in_stock() ) {
+		return __( 'Ce produit est actuellement indisponible.', 'parfolys' );
+	}
+	return $text;
+}, 10, 2 );
+
+/**
+ * Recherche produits : inclut les noms de marque, avec ou sans accent (Boticario / Boticário).
+ */
+add_filter( 'posts_search', function ( $search, WP_Query $q ) {
+	global $wpdb;
+	if ( ! $q->is_main_query() || ! $q->is_search() || is_admin() || 'product' !== $q->get( 'post_type' ) || '' === $search ) {
+		return $search;
+	}
+	$term = trim( (string) $q->get( 's' ) );
+	if ( '' === $term || ! taxonomy_exists( 'product_brand' ) ) {
+		return $search;
+	}
+	$like = '%' . $wpdb->esc_like( remove_accents( $term ) ) . '%';
+	$ids  = $wpdb->get_col( $wpdb->prepare(
+		"SELECT tr.object_id FROM {$wpdb->term_relationships} tr
+		 INNER JOIN {$wpdb->term_taxonomy} tt ON tt.term_taxonomy_id = tr.term_taxonomy_id AND tt.taxonomy IN ('product_brand','pa_famille-olfactive')
+		 INNER JOIN {$wpdb->terms} t ON t.term_id = tt.term_id
+		 WHERE t.name LIKE %s OR t.slug LIKE %s",
+		$like,
+		'%' . $wpdb->esc_like( sanitize_title( $term ) ) . '%'
+	) );
+	if ( ! $ids ) {
+		return $search;
+	}
+	$ids = implode( ',', array_map( 'absint', $ids ) );
+	return preg_replace( '/^\s*AND\s*\(/', " AND ( {$wpdb->posts}.ID IN ({$ids}) OR (", $search, 1 ) . ')';
 }, 10, 2 );
