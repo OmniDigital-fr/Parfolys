@@ -21,6 +21,13 @@ Boutique de parfums, soins parfumés et senteurs pour la maison, sur **parfolys.
 
 Export Notion PARFOLYS V2 (pages 01 à 06 et 07) lu intégralement : tokens du Brand Book (boutons 6 px, cartes 8 px, #666666, #767676, #E5E5E5, conteneur 1200 px), textes de la Carta Editorial (univers, À propos, microtextes), séquence d'accueil, filtres, fiche et panier du Caderno WooCommerce.
 
+## Intégration AW Dropship EU
+
+AW ne fournit pas d'extension WordPress : la connexion se fait depuis le compte AW (Channels > Add Sales Channel > WooCommerce > Auth Store), par l'API REST WooCommerce (app « AW Connect », clés Read/Write et deux webhooks). Guide : https://www.aw-dropship.eu/docs/connecting-woocommerce
+
+- `wp-content/plugins/parfolys-catalogue/` : tout produit créé par l'API reste en brouillon « À valider » (filtre dédié dans Produits), reçoit la classe `colis-maison` s'il n'en a pas et est marqué « Import API (AW) ». Publier le produit depuis l'admin retire le marqueur. Les mises à jour de stock AW ne changent pas le statut.
+- AW importe les commandes payées au statut « En cours » avec un pays de livraison : ne jamais passer une commande de test en « En cours » une fois le canal connecté.
+
 ## Configuration WooCommerce en place (préproduction)
 
 - Site en mode maintenance Hostinger, indexation désactivée.
